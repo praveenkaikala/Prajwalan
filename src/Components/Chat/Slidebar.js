@@ -7,7 +7,7 @@ const Slidebar = () => {
     const nav=useNavigate()
     const [data,setdata]=useState([{
         "id": 1,
-        "username": "Haslett"
+        "username": "Hasle"
       }, {
         "id": 2,
         "username": "Margi"

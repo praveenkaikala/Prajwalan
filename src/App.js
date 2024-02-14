@@ -10,6 +10,7 @@ import Mychats from './Components/Mychats'
 import './index.css'
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom'
 import Welcome from './Components/Chat/Welcome'
+import AddIdea from './Components/AddIdea'
 export const mycontext = createContext()
 const App = () => {
   const [loading,setloding]=useState(true)
@@ -25,7 +26,7 @@ const App = () => {
     return <div>Loading...</div>; // Render loading indicator while retrieving login state
   }
   return (
-    <div>
+    <div className='m-0'>
       <mycontext.Provider value={{
         islogin:islogin,
         setislogin:setislogin,
@@ -38,7 +39,7 @@ const App = () => {
         <Route path='ideas' element={<Ideas/>}/>
         <Route path='mychats' element={<Mychats/>}>
         <Route path='welcome' element={<Welcome/>}/>
-        <Route path='chat' element={<Chat/>}/>
+        <Route path='chat/:_id' element={<Chat/>}/>
         </Route>
         <Route path='myprofile' element={<Profile/>}/>
       </Routes>

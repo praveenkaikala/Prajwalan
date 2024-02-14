@@ -1,20 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    margin: 0;
+    padding: 0;
+}
 .active {
-    /* Your active styles here */
     color: blue;
     border-bottom: solid blue 3px;
     transition: ease-in-out 0.2s;
   }
-  .slidebar{
+.slidebar{
     flex: 0.3;
   }
-  .chat
+.chat
   {
     flex: 0.7;
   }
-  .welcome
+.welcome
   {
     flex: 0.7;
   }
+.navbar
+  {
+    background-color: blue;
+    background: none;
+    position: sticky;
+    top: 0;
+    z-index:10;
+}
+.home
+{
+    z-index: 1;
+}
+.chatname:hover{
+background-color: rgb(188, 187, 187);
+transition: ease-in-out 0.5s;
+}

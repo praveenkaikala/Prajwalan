@@ -56,19 +56,26 @@ const handleOnClose=()=>{
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm w-100p">
             <Formik
               initialValues={{
-                username: '',
+                userName: '',
                 password: ''
               }}
               validationSchema={Yup.object({
-                username: Yup.string().required('Username is required'),
+                userName: Yup.string().required('Username is required'),
                 password: Yup.string().required('Password is required')
               })}
               onSubmit={(values, { setSubmitting }) => {
                const data={
-                username:values.username,
+                userName:values.userName,
                 password:values.password
                }
-               console.log(data)
+               axios.post("http://localhost:8082/api/v1/auth/authenticate",data, {
+                headers: {
+                  "Content-Type": "application/json"
+                }
+              }).then((response)=>{
+                console.log(response.data)
+              })
+               
               }}
             >
               <Form className="space-y-6 w-100p">
@@ -77,8 +84,8 @@ const handleOnClose=()=>{
                     Username
                   </label>
                   <div className="mt-2">
-                    <Field id="username" name="username" type="text" autoComplete="username" className="block w-100p rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-                    <ErrorMessage name="username" component="div" className="text-red-500 text-sm" />
+                    <Field id="username" name="userName" type="text" autoComplete="username" className="block w-100p rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                    <ErrorMessage name="userName" component="div" className="text-red-500 text-sm" />
                   </div>
                 </div>
 

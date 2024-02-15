@@ -1,16 +1,29 @@
 import React, { useContext, useState } from 'react';
 import { mycontext } from '../App';
 import { Button } from '@mui/material';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormikContext, useFormik } from 'formik';
 import * as Yup from 'yup';
 
 const Login = () => {
+
+
+  
+  // const formik=useFormik({
+  //   initialValues:{
+  //     name: '',
+  //     email: '',
+  //     username: '',
+  //     password: '',
+  //     otp: ''
+  //   }
+  // })
+  const [disable,setdisable]=useState(true)
   const [sendotp, setSendOtp] = useState(false);
   const { setislogin } = useContext(mycontext);
   const [login, setLogin] = useState(true);
 
   const handleLoginSuccess = () => {
-    setislogin(true);
+    // setislogin(true);
     localStorage.setItem('isLogin', 'true');
   };
 
@@ -36,10 +49,11 @@ const Login = () => {
                 password: Yup.string().required('Password is required')
               })}
               onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  setSubmitting(false);
-                }, 400);
+               const data={
+                username:values.username,
+                password:values.password
+               }
+               console.log(data)
               }}
             >
               <Form className="space-y-6 w-100p">
@@ -108,16 +122,20 @@ const Login = () => {
                   otp: Yup.number().required("enter otp")
                 })}
                 onSubmit={(values, { setSubmitting }) => {
-                  setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                  }, 400);
+                 const data={
+                  username:values.username,
+                  password:values.password,
+                  name:values.name,
+                 }
+                 setSubmitting(true)
+                 console.log(data)
                 }}
               >
+                
                 <Form className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                    <Field id="name" name="name" type="text" autoComplete="name" className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <Field id="name" name="name" disable="true" type="text" autoComplete="name" className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                     <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className='flex flex-col'>
@@ -149,9 +167,6 @@ const Login = () => {
                           <div>
                            <Button
                       variant="contained"
-                      onClick={() => {
-                        setSendOtp(true);
-                      }}
                       style={{marginLeft:'5px'}}
                     >
                     Send OTP
@@ -201,6 +216,8 @@ const Login = () => {
                     <button
                       type="submit"
                       className="w-100p flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+
+                      
                     >
                       Create Account
                     </button>

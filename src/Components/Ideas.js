@@ -3,7 +3,7 @@ import image from "../Asserts/image.png";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import 'swiper/css';
-import { Button } from '@mui/material';
+import { Button, Rating } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddIdea from './AddIdea';
@@ -80,7 +80,9 @@ const Ideas = () => {
         "username": "Charline",
         "name": "Charline Dovinson"
       }])
-    const [liked,setliked]=useState(Array(data.length).fill(false))
+    const [liked,setliked]=useState(Array(data.length).fill({
+        value:0
+    }))
     const handlelikes=(index)=>{
         let likes=[...liked]
         likes[index]=!likes[index]
@@ -108,8 +110,8 @@ const Ideas = () => {
                 </div>
             <div className='flex justify-around h-10p items-center mt-2'>
                 <div className='cursor-pointer flex flex-col items-center' onClick={()=>handlelikes(index)}>
-                    {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>}
-                     
+                    {/* {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>} */}
+                    <Rating name="simple-controlled"/>
                      <p>{data.likes}</p>
                 </div>
            

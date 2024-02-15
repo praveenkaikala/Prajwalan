@@ -3,10 +3,22 @@ import { mycontext } from '../App';
 import { Button } from '@mui/material';
 import { Formik, Form, Field, ErrorMessage, useFormikContext, useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
+import Modal from './Modal';
 
+const validationSchema = Yup.object().shape({
+  otp: Yup.string()
+    .required('OTP is required')
+    .matches(/^\d{6}$/, 'OTP must be a 6-digit number')
+});
+
+// Define the initial form values
+const initialValues = {
+  otp: ''
+};
 const Login = () => {
 
-
+   const [openModal,setOpenModal]=useState(false);
   
   // const formik=useFormik({
   //   initialValues:{
@@ -17,11 +29,14 @@ const Login = () => {
   //     otp: ''
   //   }
   // })
+  const [email,setemail]=useState("")
   const [disable,setdisable]=useState(true)
   const [sendotp, setSendOtp] = useState(false);
   const { setislogin } = useContext(mycontext);
   const [login, setLogin] = useState(true);
-
+const handleOnClose=()=>{
+  setOpenModal(false)
+}
   const handleLoginSuccess = () => {
     // setislogin(true);
     localStorage.setItem('isLogin', 'true');
@@ -108,34 +123,56 @@ const Login = () => {
             <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
               <Formik
                 initialValues={{
-                  name: '',
+                  firstName: '',
+                  lastName: '',
                   email: '',
-                  username: '',
+                  userName: '',
                   password: '',
-                  otp: ''
+          
                 }}
                 validationSchema={Yup.object({
-                  name: Yup.string().required('Name is required'),
+                  firstName: Yup.string().required('Name is required'),
+                  lastName: Yup.string().required('Name is required'),
                   email: Yup.string().email('Invalid email address').required('Email is required'),
                   username: Yup.string().required('Username is required'),
                   password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
-                  otp: Yup.number().required("enter otp")
+                 
                 })}
                 onSubmit={(values, { setSubmitting }) => {
                  const data={
-                  username:values.username,
+                  firstName:values.firstName,
+                  lastName: values.lastName,
+                  email:values.email,
+                  userName:values.username,
                   password:values.password,
-                  name:values.name,
                  }
+                 setemail(values.email)
                  setSubmitting(true)
-                 console.log(data)
+                 axios.post("http://localhost:8082/api/v1/auth/register", data, {
+                  headers: {
+                    "Content-Type": "application/json"
+                  }
+                }).then((response) => {
+                  if(response.status===200){
+                    setOpenModal(true);
+                  }
+                  console.log(response.data);
+                }).catch((error) => {
+                  console.error(error);
+                });
+                
                 }}
               >
                 
                 <Form className="space-y-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                    <Field id="name" name="name" disable="true" type="text" autoComplete="name" className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">FirstName</label>
+                    <Field id="firstName" name="firstName" type="text" autoComplete="name" className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
+                  </div>
+                  <div>
+                    <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">LastName</label>
+                    <Field id="lastName" name="lastName" type="text" autoComplete="name" className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                     <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
                   </div>
                   <div className='flex flex-col'>
@@ -179,7 +216,7 @@ const Login = () => {
                   </div>
                     </div>
                    
-                  {sendotp && (
+                  {/* {sendotp && (
                     <div className='mt-3 flex'>
                       <div>
                          <label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
@@ -197,7 +234,7 @@ const Login = () => {
                           </div>
                      
                     </div>
-                  )}
+                  )} */}
                     </div>
                    
                   </div>
@@ -231,6 +268,57 @@ const Login = () => {
                 </button>
               </p>
             </div>
+
+            {openModal && (
+  <Modal isOpen={openModal} onClose={handleOnClose}>
+    <h2>Verify OTP</h2>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values, { setSubmitting }) => {
+const data={
+  email:email,
+  otp:values.otp
+}
+       axios.post("http://localhost:8082/api/v1/auth/validate-otp",data, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((response)=>{
+        if(response.status===200)
+        {
+          setOpenModal(false);
+console.log("success")
+        }
+      })
+      }}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <div className="mb-4">
+            <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+              Enter OTP:
+            </label>
+            <Field
+              type="text"
+              name="otp"
+              className="border border-gray-300 rounded-lg p-2 w-full"
+            />
+            <ErrorMessage name="otp" component="div" className="text-red-500 text-sm" />
+          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+          >
+            Verify
+          </button>
+        </Form>
+      )}
+    </Formik>
+  </Modal>
+)}
+
           </div>
         </div>
       )}

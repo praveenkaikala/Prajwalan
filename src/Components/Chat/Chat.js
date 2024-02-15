@@ -71,9 +71,38 @@ const Chat = () => {
                 </div>
                <DeleteIcon className=' mr' style={{marginRight:"10px",cursor:"pointer"}}/>
             </div>
-            <div className='flex w-100p justify-center' style={{flex:1}}>
-                <div className='w-100p border border-grey-400'>
-s
+            <div className='flex w-100p border border-grey-400 justify-center overflow-scroll' style={{flex:1,scrollbarWidth:'none',scrollBehavior:"smooth"}}>
+                <div className='w-100p '>
+                    <div className='flex justify-start '>
+                        <div className='m-2 bg-gray-300 rounded-full' style={{maxWidth:"50%"}}>
+                            <p className='p-2 m-3'>hello fdfkdlkdlkfld ;dldkfldbl dlklekvldffk kkbkdk lldk lkdlk lklk ldk leklk</p>
+                        </div>
+                    </div>
+                    <div className='flex justify-end'>
+                        <div className='m-2 bg-green-300 rounded-full' style={{maxWidth:"50%"}}>
+                            <p className='p-2 m-3'>hello fdfkdlkdlkfld ;dldkfldbl dlklekvldffk kkbkdk lldk lkdlk lklk ldk leklk</p>
+                        </div>
+                    </div>
+                    <div className='flex justify-end'>
+                        <div className='m-2 bg-green-300 rounded-full' style={{maxWidth:"50%"}}>
+                            <p className='p-2 m-3'>hello fdfkdlkdlkfld ;dldkfldbl dlklekvldffk kkbkdk lldk lkdlk lklk ldk leklk</p>
+                        </div>
+                    </div>
+                    <div className='flex justify-end'>
+                        <div className='m-2 bg-green-300 rounded-full' style={{maxWidth:"50%"}}>
+                            <p className='p-2 m-3'>hello fdfkdlkdlkfld ;dldkfldbl dlklekvldffk kkbkdk lldk lkdlk lklk ldk leklk</p>
+                        </div>
+                    </div>
+                    <div className='flex justify-end'>
+                        <div className='m-2 bg-green-300 rounded-full' style={{maxWidth:"50%"}}>
+                            <p className='p-2 m-3'>hello fdfkdlkdlkfld ;dldkfldbl dlklekvldffk kkbkdk lldk lkdlk lklk ldk leklk</p>
+                        </div>
+                    </div>
+                    <div className='flex justify-end'>
+                        <div className='m-2 bg-green-300 rounded-full' style={{maxWidth:"50%"}}>
+                            <p className='p-2 m-3'>hello fdfkdlkdlkfld ;dldkfldbl dlklekvldffk kkbkdk lldk lkdlk lklk ldk leklk</p>
+                        </div>
+                    </div>
                 </div>
 
             </div>

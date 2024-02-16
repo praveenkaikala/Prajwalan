@@ -8,17 +8,23 @@ import Chat from "./Components/Chat/Chat";
 import Slidebar from "./Components/Chat/Slidebar";
 import Mychats from "./Components/Mychats";
 import "./index.css";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Router, Routes, useNavigate } from "react-router-dom";
 import Welcome from "./Components/Chat/Welcome";
 import AddIdea from "./Components/AddIdea";
+
 export const mycontext = createContext();
 const App = () => {
   const [loading, setloding] = useState(true);
   const [islogin, setislogin] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
-    const storedIsLogin =JSON.parse(localStorage.getItem("userdata"));
-    if (storedIsLogin.token) {
-      setislogin(true);
+    // const storedUseLogin = sessionStorage.getItem("isLogin");
+    
+    if (sessionStorage.getItem("isLogin")) {
+      // navigate("/ideas")
+      
+      setislogin(JSON.parse(sessionStorage.getItem("isLogin")));
+      
     }
     setloding(false);
   }, []);
@@ -34,7 +40,7 @@ const App = () => {
         }}
       >
         {islogin ? (
-          <BrowserRouter>
+          <>
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
@@ -45,7 +51,7 @@ const App = () => {
               </Route>
               <Route path="myprofile" element={<Profile />} />
             </Routes>
-          </BrowserRouter>
+            </>
         ) : (
           <Login />
         )}

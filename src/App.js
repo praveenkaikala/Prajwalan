@@ -7,17 +7,19 @@ import Profile from "./Components/Profile";
 import Chat from "./Components/Chat/Chat";
 import Mychats from "./Components/Mychats";
 import "./index.css";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Router, Routes, useNavigate } from "react-router-dom";
 import Welcome from "./Components/Chat/Welcome";
 import AddIdea from "./Components/AddIdea";
+
 export const mycontext = createContext();
 const App = () => {
   const [loading, setloding] = useState(true);
   const [islogin, setislogin] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
-    const storedIsLogin = localStorage.getItem("isLogin");
-    if (storedIsLogin) {
-      setislogin(JSON.parse(storedIsLogin));
+    const storedIsLogin =JSON.parse(localStorage.getItem("userdata"));
+    if (storedIsLogin.token) {
+      setislogin(true);
     }
     setloding(false);
   }, []);
@@ -33,7 +35,7 @@ const App = () => {
         }}
       >
         {islogin ? (
-          <BrowserRouter>
+          <>
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
@@ -44,7 +46,7 @@ const App = () => {
               </Route>
               <Route path="myprofile" element={<Profile />} />
             </Routes>
-          </BrowserRouter>
+            </>
         ) : (
           <Login />
         )}

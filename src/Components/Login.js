@@ -16,7 +16,6 @@ import Modal from "./Modal";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { toaster } from "toaster-js/Toaster";
 import { useNavigate } from "react-router-dom";
 const validationSchema = Yup.object().shape({
   otp: Yup.string()
@@ -37,22 +36,28 @@ const Login = () => {
   const [sendotp, setSendOtp] = useState(false);
   const { setislogin } = useContext(mycontext);
   const [login, setLogin] = useState(true);
+  const nav=useNavigate()
   const handleOnClose = () => {
     setOpenModal(false);
+  };
+  const handleLoginSuccess = () => {
+    // setislogin(true);
+    localStorage.setItem("isLogin", "true");
   };
 
   return (
     <div>
       {login ? (
         // Login form
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
               Sign in to your account
             </h2>
           </div>
 
-          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm w-100p">
+          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm w-100p border-1 border-black  bg-white p-5 rounded-lg shadow-2xl">
+            
             <Formik
               initialValues={{
                 userName: "",
@@ -73,16 +78,16 @@ const Login = () => {
                   }
                 }).then((response)=>{
                   setLoading(false)
-                  if(response.status===200)
+                  if(response.status===200 && response.data.status === "Verified")
                   {
-                    localStorage.setItem("isLogin", "true");
-                    localStorage.setItem("userdata",JSON.stringify({
-                      "token":"skdjkshfdcksjcf",
-                    }))
+                    localStorage.setItem("userdata",JSON.stringify(response.data))
                   }
                   else{
-                     alert("enter correct username and password");
+                    setOpenModal(true);
                   }
+                }).catch((err)=>{
+                  setLoading(false);
+                  setMsg("Email or Password incorrect");
                 })
                
               }}
@@ -91,17 +96,17 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="username"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm font-semibold  leading-6 text-gray-900"
                   >
                     Username
                   </label>
-                  <div className="mt-2">
+                  <div className="mt-1">
                     <Field
                       id="username"
                       name="userName"
                       type="text"
                       autoComplete="username"
-                      className="block w-100p rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-100p rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                     <ErrorMessage
                       name="userName"
@@ -114,17 +119,17 @@ const Login = () => {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className="block text-sm  leading-6 text-gray-900 font-semibold"
                   >
                     Password
                   </label>
-                  <div className="mt-2">
+                  <div className="mt-1">
                     <Field
                       id="password"
                       name="password"
                       type="password"
                       autoComplete="current-password"
-                      className="block w-100p rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      className="block w-100p px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                     <ErrorMessage
                       name="password"
@@ -134,9 +139,14 @@ const Login = () => {
                   </div>
                 </div>
 
-                <div className="w-100p flex justify-center">
+                <div className="w-100p  justify-center flex flex-col gap-3">
+                  {
+                    msg.length >0 && 
+                <p className="text-red-500 text-center font-semibold">{msg}</p>
+                  }
                   <button
                     type="submit"
+                    onClick={handleLoginSuccess}
                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                   { loading?<CircularProgress color="secondary" /> : <p>Login</p>}
@@ -158,14 +168,14 @@ const Login = () => {
         </div>
       ) : (
         // Registration form
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="flex flex-1 flex-col justify-center  lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h2 className="mt-6 text-center text-3xl font-semibold text-gray-900 capitalize">
               Create your account
             </h2>
           </div>
           <div className="mt-8 sm:mx-auto w-80p sm:max-w-md">
-            <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <div className="bg-white py-8 px-4  sm:rounded-lg sm:px-10 shadow-2xl">
               <Formik
                 initialValues={{
                   firstName: "",
@@ -175,7 +185,7 @@ const Login = () => {
                   password: "",
                 }}
                 validationSchema={Yup.object({
-                  firstName: Yup.string().required("Name is required"),
+                  firstname: Yup.string().required("Name is required"),
                   lastName: Yup.string().required("Name is required"),
                   email: Yup.string()
                     .email("Invalid email address")
@@ -190,7 +200,7 @@ const Login = () => {
                     firstName: values.firstName,
                     lastName: values.lastName,
                     email: values.email,
-                    userName: values.username,
+                    userName: values.userName,
                     password: values.password,
                   };
                   setemail(values.email);
@@ -204,6 +214,7 @@ const Login = () => {
                     setLoading(false)
                     if(response.status===200){
                       setOpenModal(true);
+                      
                     }
                     console.log(response.data);
                   }).catch((error) => {
@@ -214,7 +225,7 @@ const Login = () => {
                 <Form className="space-y-6">
                   <div>
                     <label
-                      htmlFor="firstname"
+                      htmlFor="firstName"
                       className="block text-sm font-medium text-gray-700"
                     >
                       FirstName
@@ -234,7 +245,7 @@ const Login = () => {
                   </div>
                   <div>
                     <label
-                      htmlFor="lastname"
+                      htmlFor="lastName"
                       className="block text-sm font-medium text-gray-700"
                     >
                       LastName
@@ -276,58 +287,15 @@ const Login = () => {
                           />
                         </div>
 
-                        {/* <div>
-                          {sendotp ? (
-                            <div>
-                              <Button
-                                variant="contained"
-                                onClick={() => {
-                                  setSendOtp(true);
-                                }}
-                                style={{ marginLeft: "5px" }}
-                              >
-                                ReSend OTP
-                              </Button>
-                            </div>
-                          ) : (
-                            <div>
-                              <div>
-                                <Button
-                                  variant="contained"
-                                  style={{ marginLeft: "5px" }}
-                                >
-                                  Send OTP
-                                </Button>
-                              </div>
-                            </div>
-                          )}
-                        </div> */}
+                       
                       </div>
 
-                      {/* {sendotp && (
-                    <div className='mt-3 flex'>
-                      <div>
-                         <label htmlFor="otp" className="block text-sm font-medium text-gray-700">Enter OTP</label>
-                      <Field id="otp" name="otp" type="number" autoComplete="off" className="appearance-none block w-100p  px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-                      <ErrorMessage name="otp" component="div" className="text-red-500 text-sm" />
-                        </div>
-                        <div className='mt-5'>
-                        <Button
-                      variant="contained"
-                      style={{marginLeft:'5px'}}
-                    >
-                    Verify OTP
-                    </Button>
-
-                          </div>
-                     
-                    </div>
-                  )} */}
+            
                     </div>
                   </div>
                   <div>
                     <label
-                      htmlFor="username"
+                      htmlFor="userName"
                       className="block text-sm font-medium text-gray-700"
                     >
                       Username
@@ -369,9 +337,10 @@ const Login = () => {
                   <div>
                     <button
                       type="submit"
-                      className="w-100p flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      style={{width:"100%!important"}}
+                      className="w-[100%] flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      { loading?<CircularProgress color="secondary" /> : <p>Login</p>}
+                      { loading?<CircularProgress color="secondary" /> : <p>Register</p>}
                     </button>
                   </div>
                 </Form>
@@ -379,7 +348,7 @@ const Login = () => {
               <p className="mt-10 text-center text-sm text-gray-500">
                 Already have an account?{" "}
                 <button
-                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 w-[100%]"
                   onClick={() => setLogin(true)}
                 >
                   Login
@@ -411,8 +380,8 @@ const Login = () => {
                       .then((response) => {
                         if (response.status === 200) {
                           setOpenModal(false);
-                          localStorage.setItem("isLogin", "true");
                           localStorage.setItem("userdata",JSON.stringify(response.data))
+                          nav("/")
                         }
                       });
                   }}

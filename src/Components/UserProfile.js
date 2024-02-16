@@ -5,14 +5,14 @@ import { Button, Rating } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CloseIcon from "@mui/icons-material/Close";
-const UserProfile = ({ id, name, username, email, profile, setProfile }) => {
+const UserProfile = ({ id, firstName,lastName, userName, email, profile, setProfile }) => {
   const [addidea, setaddidea] = useState(false);
   const ref = useRef();
   useEffect(() => {
     ref.current?.scrollIntoView({
       block: "start",
     });
-  });
+  },[]);
 
   const [userdata, setuserdata] = useState({
     id: 1,
@@ -67,12 +67,12 @@ const UserProfile = ({ id, name, username, email, profile, setProfile }) => {
       },
     ],
   });
-  const [liked, setliked] = useState(Array(userdata.ideas.length).fill(0));
+  const [liked, setliked] = useState(Array(userdata.ideas.length).fill(false));
 
-  const handleRatingChange = (newValue, index) => {
-    const updatedLiked = [...liked];
-    updatedLiked[index] = newValue;
-    setliked(updatedLiked);
+  const handlelikes = (index) => {
+    let likes = [...liked];
+    likes[index] = !likes[index];
+    setliked(likes);
   };
   return (
     <div ref={ref}>
@@ -106,13 +106,13 @@ const UserProfile = ({ id, name, username, email, profile, setProfile }) => {
                 />
               </div>
               <div className="m-5 flex flex-col justify-center">
-                <div className="flex mt-1">
+                {/* <div className="flex mt-1">
                   <span>UserName:</span>
-                  <p className="font-semibold ml-2">{username}</p>
-                </div>
+                  <p className="font-semibold ml-2">{userName}</p>
+                </div> */}
                 <div className="flex mt-1">
                   <span>Name:</span>
-                  <p className="font-semibold ml-2">{name}</p>
+                  <p className="font-semibold ml-2">{firstName} {lastName}</p>
                 </div>
                 <div className="flex mt-1">
                   <span>Gmail:</span>
@@ -122,7 +122,7 @@ const UserProfile = ({ id, name, username, email, profile, setProfile }) => {
               </div>
             </div>
             <div className="flex flex-col justify-center w-100p items-center mt-3">
-              <p className="font-bold">my ideas</p>
+              <p className="font-bold"> Ideas</p>
               {userdata.ideas.map((data, index) => {
                 return (
                   <div
@@ -141,15 +141,23 @@ const UserProfile = ({ id, name, username, email, profile, setProfile }) => {
                       <p>{data.content}</p>
                     </div>
                     <div className="flex justify-around h-10p items-center mt-2">
-                      <div className="cursor-pointer flex flex-col items-center">
-                        <Rating
-                          name="simple-controlled"
-                          value={liked[index]}
-                          onChange={(event, newValue) =>
-                            handleRatingChange(newValue, index)
+                    <div
+                        className="cursor-pointer flex flex-col items-center"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlelikes(index)
+                          if(!liked[index])
+                          {
+                            data.rating++
                           }
-                        />
-                        <p>{data.likes}</p>
+                          else{
+                            data.rating--
+                          }
+                          
+                        }}
+                      >
+                       {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>}
+                        <p>{data.rating}</p>
                       </div>
                     </div>
                   </div>

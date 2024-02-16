@@ -12,15 +12,6 @@ const Navbar = () => {
       <div className=" justify-between flex w-50p">
         <li
           className={
-            location.pathname === "/"
-              ? "list-none font-semibold active"
-              : "list-none font-semibold"
-          }
-        >
-          <Link to={"/"}>Home</Link>
-        </li>
-        <li
-          className={
             path.startsWith("/ideas")
               ? "list-none font-semibold active"
               : "list-none font-semibold"

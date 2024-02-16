@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
 const Chat = () => {
   const { _id } = useParams();
-  const [id, name] = _id.split("&");
+  const [id,firstName,lastName] = _id.split("&");
   const [chat, setchat] = useState([
     {
       id: 1,
@@ -85,7 +85,7 @@ const Chat = () => {
             {/* <div className="rounded-10  m-3">
               <img src={image} alt="photo" className="rounded-full w-30" />
             </div> */}
-            <p className="font-semibold p-2">{name}</p>
+            <p className="font-semibold p-2">{firstName} {lastName}</p>
           </div>
           <DeleteIcon
             className=" mr"

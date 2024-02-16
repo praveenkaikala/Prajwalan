@@ -59,11 +59,11 @@ const Profile = () => {
       },
     ],
   });
-  const [liked, setliked] = useState(Array(userdata.length).fill(0));
-  const handleRatingChange = (newValue, index) => {
-    const updatedLiked = [...liked];
-    updatedLiked[index] = newValue;
-    setliked(updatedLiked);
+  const [liked, setliked] = useState(Array(userdata.length).fill(false));
+  const handlelikes = (index) => {
+    let likes = [...liked];
+    likes[index] = !likes[index];
+    setliked(likes);
   };
   return (
     <div
@@ -125,16 +125,24 @@ const Profile = () => {
                     <p className="p-2">{data.content}</p>
                   </div>
                   <div className="flex justify-around h-10p items-center mt-2">
-                    <div className="cursor-pointer flex flex-col items-center">
-                      <Rating
-                        name="simple-controlled"
-                        value={liked[index]}
-                        onChange={(event, newValue) =>
-                          handleRatingChange(newValue, index)
-                        }
-                      />
-                      <p>{data.likes}</p>
-                    </div>
+                  <div
+                        className="cursor-pointer flex flex-col items-center"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlelikes(index)
+                          if(!liked[index])
+                          {
+                            data.rating++
+                          }
+                          else{
+                            data.rating--
+                          }
+                          
+                        }}
+                      >
+                       {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>}
+                        <p>{data.rating}</p>
+                      </div>
                     <Button variant="text">Delete Idea</Button>
                   </div>
                 </div>

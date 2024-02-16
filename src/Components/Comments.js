@@ -24,7 +24,7 @@ const Comments = () => {
                     <p className='p-3'>hello man fodfl klfldkv lfkslk kfklkl kefklk kleklekfl</p>
                 </div>
             </div>
-            <div className='flex w-90p justify-between items-center border border-grey-400 rounded-full mb-2'>
+            <div className='flex w-90p justify-between items-center border border-grey-400 rounded-full mb-2 bg-white' style={{backgroundColor:"transparent"}}>
                 <input type='text' placeholder='add comment' className='p-2 ml-2' style={{outline:"none"}} onKeyDown={(e)=>{
                     if(e.key==="Enter")
                     {

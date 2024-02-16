@@ -17,103 +17,82 @@ const Ideas = () => {
   const [profile, setProfile] = useState(false);
   const [selectedId, setSelectedId] = useState({
     id: "", 
-    username: "",
-    name: "",
+    userName: "",
+    firstName: "",
+    lastName:"",
     email: "",
   });
   const [addidea, setaddidea] = useState(false);
-  const [data, setdata] = useState([
+ 
+  
+  const [posts, setPosts] = useState([
     {
-      id: 1,
-      content:
-        "Nulla facilisi. Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui.",
-      likes: "597",
-      email: "aharbour0@github.io",
-      username: "Anson",
-      name: "Anson Harbour",
+        "id": 5,
+        "content": "This post is good Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ip",
+        "category": null,
+        "rating": 0,
+        "userDto": {
+            "id": 3,
+            "userName": "kaikalapraveen24@gmail.com",
+            "firstName": "Praveen",
+            "lastName": "Kaikala",
+            "email": "kaikalapraveen24@gmail.com"
+        }
     },
     {
-      id: 2,
-      content:
-        "Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-      likes: "842",
-      email: "wigonet1@independent.co.uk",
-      username: "Waylin",
-      name: "Waylin Igonet",
+        "id": 4,
+        "content": "Hello",
+        "category": null,
+        "rating": 0,
+        "userDto": {
+            "id": 4,
+            "userName": "karthikarava1802@gmail.com",
+            "firstName": "Karthik",
+            "lastName": "Arava",
+            "email": "karthikarava1802@gmail.com"
+        }
     },
     {
-      id: 3,
-      content:
-        "Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius. Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.",
-      likes: "975",
-      email: "jreavell2@jugem.jp",
-      username: "Jacqueline",
-      name: "Jacqueline Reavell",
+        "id": 3,
+        "content": "Srkr engineering college",
+        "category": null,
+        "rating": 0,
+        "userDto": {
+            "id": 4,
+            "userName": "karthikarava1802@gmail.com",
+            "firstName": "Karthik",
+            "lastName": "Arava",
+            "email": "karthikarava1802@gmail.com"
+        }
     },
     {
-      id: 4,
-      content:
-        "Aliquam erat volutpat. In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.",
-      likes: "1875",
-      email: "mhoward3@walmart.com",
-      username: "Morgen",
-      name: "Morgen Howard",
+        "id": 2,
+        "content": "Srkr engineering college",
+        "category": null,
+        "rating": 0,
+        "userDto": {
+            "id": 2,
+            "userName": "jp7903424@gmail.com",
+            "firstName": "Balireddy",
+            "lastName": "John Prakash",
+            "email": "jp7903424@gmail.com"
+        }
     },
     {
-      id: 5,
-      content: "Nunc purus. Phasellus in felis.",
-      likes: "46933",
-      email: "jbeden4@hibu.com",
-      username: "Joye",
-      name: "Joye Beden",
-    },
-    {
-      id: 6,
-      content:
-        "Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est. Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.",
-      likes: "00",
-      email: "aparmley5@issuu.com",
-      username: "Aldous",
-      name: "Aldous Parmley",
-    },
-    {
-      id: 7,
-      content:
-        "Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi. Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus.",
-      likes: "5",
-      email: "cleander6@wired.com",
-      username: "Coriss",
-      name: "Coriss Leander",
-    },
-    {
-      id: 8,
-      content:
-        "Suspendisse potenti. Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.",
-      likes: "096",
-      email: "bgosker7@economist.com",
-      username: "Basilius",
-      name: "Basilius Gosker",
-    },
-    {
-      id: 9,
-      content:
-        "Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",
-      likes: "17899",
-      email: "lgollin8@opera.com",
-      username: "Leandra",
-      name: "Leandra Gollin",
-    },
-    {
-      id: 10,
-      content: "Curabitur gravida nisi at nibh.",
-      likes: "5017",
-      email: "cdovinson9@imdb.com",
-      username: "Charline",
-      name: "Charline Dovinson",
-    },
-  ]);
-  const [liked, setliked] = useState(Array(data.length).fill(0));
-  const [posts, setPosts] = useState([]);
+        "id": 1,
+        "content": "This Post May Contain Best Algorithms lorem",
+        "category": "WEB_DEV",
+        "rating": 0,
+        "userDto": {
+            "id": 2,
+            "userName": "jp7903424@gmail.com",
+            "firstName": "Balireddy",
+            "lastName": "John Prakash",
+            "email": "jp7903424@gmail.com"
+        }
+    }
+]);
+  const [liked, setliked] = useState(Array(posts.length).fill(false));
   console.log(liked);
   const handlelikes = (index) => {
     let likes = [...liked];
@@ -143,7 +122,7 @@ const Ideas = () => {
     setliked(updatedLiked);
   };
   return (
-    <div className="flex justify-center w-full h-full ">
+    <div className="flex justify-center " style={{width:"100%"}}>
       {addidea ? (
         <AddIdea addidea={addidea} setaddidea={setaddidea} />
       ) : (
@@ -151,52 +130,73 @@ const Ideas = () => {
           {profile ? (
             <UserProfile
               id={selectedId.id}
-              name={selectedId.name}
-              username={selectedId.username}
+              firstName={selectedId.firstName}
+              userName={selectedId.userName}
+              lastName={selectedId.lastName}
               email={selectedId.email}
               profile={profile}
               setProfile={setProfile}
             />
           ) : (
-            <div className="flex">
-            <div className="flex w-90p items-center flex-col z-3" style={commentsBtn ? {width:"70%"} : {}}>
+            <div className="flex 100p" style={commentsBtn ? {}:{justifyContent:"center"}} >
+            <div className="flex w-80p items-center justify-center flex-col z-3" style={commentsBtn ? {width:"70%"} : {}}>
               <p className="text-center font-bold">TOP IDEAS</p>
-              {posts.map((post, index) => (
-        <div className="flex flex-col border border-grey-100 w-50p m-4" style={commentsBtn ? {width:"70%"} : {}} key={index}>
-          <div className="flex m-5">
-            <div>
-              <p className="ml-2 font-bold">{post.userDto.firstName} {post.userDto.lastName}</p>
-            </div>
-          </div>
-          <div className="flex flex-row ml-5">
-            <p>{post.content}</p>
-          </div>
-          <div className="flex justify-around h-10p items-center mt-2">
-            <div className="cursor-pointer flex flex-col items-center" onClick={() => handlelikes(index)}>
-              <Rating
-                name="simple-controlled"
-                value={liked[index]}
-                onChange={(event, newValue) => handleRatingChange(newValue, index)}
-              />
-              <p>{post.likes}</p>
-            </div>
-            <Button variant="text" onClick={()=>setCommentsBtn(true)}>comments</Button>
-            <Button variant="text" onClick={() => {
-              setSelectedId({
-                id: post.id,
-                username: post.userDto.userName,
-                name: post.userDto.firstName,
-                email: post.userDto.email,
-              });
-              setProfile(true);
-            }}>view profile</Button>
-            <Button variant="text" onClick={() => {
-              nav("/mychats/chat/" + post.id + "&" + post.userDto.userName);
-            }}>Goto chat</Button>
-          </div>
-        </div>
-      ))}
-    
+              {posts.map((data, index) => {
+                return (
+                  <div
+                    className="flex flex-col border border-grey-100 w-100p m-4" style={commentsBtn ? {width:"70%"} : {}}
+                    key={index}
+                  >
+                    <div className="flex m-5">
+                     
+                      <div>
+                        <p className="ml-2 font-bold">{data.userDto.firstName} {data.userDto.lastName}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-row ml-5">
+                      <p>{data.content}</p>
+                    </div>
+                    <div className="flex justify-around h-10p items-center mt-2">
+                      <div
+                        className="cursor-pointer flex flex-col items-center"
+                        onClick={() => {
+                          handlelikes(index)
+                          if(!liked[index])
+                          {
+                            data.rating++
+                          }
+                          else{
+                            data.rating--
+                          }
+                          
+                        }}
+                      >
+                       {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>}
+                        <p>{data.rating}</p>
+                      </div>
+                        <Button variant="text" onClick={()=>setCommentsBtn(true)}>comments</Button>
+                      <Button
+                        variant="text"
+                        onClick={() => {
+                          setSelectedId({
+                            id: data.id,
+                            userName: data.userName,
+                            firstName: data.userDto.firstName,
+                            lastName:data.userDto.lastName,
+                            email: data.userDto.email,
+                          });
+                          setProfile(true);
+                        }}
+                      >
+                        view profile
+                      </Button>
+                      <Button variant="text" onClick={()=>{
+                        nav("/mychats/chat/" + data.id + "&" + data.userDto.firstName+ "&"+data.userDto.lastName);
+                      }}>Goto chat</Button>
+                    </div>
+                  </div>
+                );
+              })}
               <div className="relative h-screen flex justify-center items-center">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-md fixed bottom-0 right-0 mb-4 mr-20"

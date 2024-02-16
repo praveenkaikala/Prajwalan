@@ -83,9 +83,10 @@ const Login = () => {
                   }
                 }).then((response)=>{
                   setLoading(false)
-                  if(response.status===200 && response.data.status === "Verified")
+                  if(response.status===200)
                   {
-                    sessionStorage.setItem("userdata",JSON.stringify(response.data))
+                    console.log(response.data.token);
+                      sessionStorage.setItem("token",response.data.token);
                     setLogin(true);
                     window.location.href = "/ideas"
                     setMsg("");
@@ -221,6 +222,8 @@ const Login = () => {
                   }).then((response) => {
                     setLoading(false)
                     if(response.status===200){
+                      console.log(response.data.token);
+                      sessionStorage.setItem("token",response.data.token);
                       setOpenModal(true);
                       
                     }

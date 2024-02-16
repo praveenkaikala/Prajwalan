@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import image from "../Asserts/image.png";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -10,6 +10,7 @@ import AddIdea from "./AddIdea";
 import UserProfile from "./UserProfile";
 import { useNavigate } from "react-router-dom";
 import Comments from "./Comments";
+import axios from "axios";
 const Ideas = () => {
   const nav=useNavigate()
   const [commentsBtn,setCommentsBtn]=useState(false)
@@ -112,12 +113,30 @@ const Ideas = () => {
     },
   ]);
   const [liked, setliked] = useState(Array(data.length).fill(0));
+  const [posts, setPosts] = useState([]);
   console.log(liked);
   const handlelikes = (index) => {
     let likes = [...liked];
     likes[index] = !likes[index];
     setliked(likes);
   };
+  useEffect( ()=>{
+    axios.get('http://localhost:8082/get-all-posts', {
+      headers: {
+        'Content-Type': 'application/json', // Content-Type header
+        'Authorization': 'Bearer '+sessionStorage.getItem("token"), // Authorization header
+      },
+    })
+    .then((res) => {
+      // Handle the response here
+      setPosts(res.data);
+      console.log(res.data);
+    })
+    .catch((error) => {
+      // Handle errors here
+      console.error('Error fetching data:', error);
+    });
+  },[])
   const handleRatingChange = (newValue, index) => {
     const updatedLiked = [...liked];
     updatedLiked[index] = newValue;
@@ -142,57 +161,42 @@ const Ideas = () => {
             <div className="flex">
             <div className="flex w-90p items-center flex-col z-3" style={commentsBtn ? {width:"70%"} : {}}>
               <p className="text-center font-bold">TOP IDEAS</p>
-              {data.map((data, index) => {
-                return (
-                  <div
-                    className="flex flex-col border border-grey-100 w-50p m-4" style={commentsBtn ? {width:"70%"} : {}}
-                    key={index}
-                  >
-                    <div className="flex m-5">
-                     
-                      <div>
-                        <p className="ml-2 font-bold">{data.username}</p>
-                      </div>
-                    </div>
-                    <div className="flex flex-row ml-5">
-                      <p>{data.content}</p>
-                    </div>
-                    <div className="flex justify-around h-10p items-center mt-2">
-                      <div
-                        className="cursor-pointer flex flex-col items-center"
-                        onClick={() => handlelikes(index)}
-                      >
-                        <Rating
-                          name="simple-controlled"
-                          value={liked[index]}
-                          onChange={(event, newValue) =>
-                            handleRatingChange(newValue, index)
-                          }
-                        />
-                        <p>{data.likes}</p>
-                      </div>
-                        <Button variant="text" onClick={()=>setCommentsBtn(true)}>comments</Button>
-                      <Button
-                        variant="text"
-                        onClick={() => {
-                          setSelectedId({
-                            id: data.id,
-                            username: data.username,
-                            name: data.name,
-                            email: data.email,
-                          });
-                          setProfile(true);
-                        }}
-                      >
-                        view profile
-                      </Button>
-                      <Button variant="text" onClick={()=>{
-                        nav("/mychats/chat/" + data.id + "&" + data.username);
-                      }}>Goto chat</Button>
-                    </div>
-                  </div>
-                );
-              })}
+              {posts.map((post, index) => (
+        <div className="flex flex-col border border-grey-100 w-50p m-4" style={commentsBtn ? {width:"70%"} : {}} key={index}>
+          <div className="flex m-5">
+            <div>
+              <p className="ml-2 font-bold">{post.userDto.firstName} {post.userDto.lastName}</p>
+            </div>
+          </div>
+          <div className="flex flex-row ml-5">
+            <p>{post.content}</p>
+          </div>
+          <div className="flex justify-around h-10p items-center mt-2">
+            <div className="cursor-pointer flex flex-col items-center" onClick={() => handlelikes(index)}>
+              <Rating
+                name="simple-controlled"
+                value={liked[index]}
+                onChange={(event, newValue) => handleRatingChange(newValue, index)}
+              />
+              <p>{post.likes}</p>
+            </div>
+            <Button variant="text" onClick={()=>setCommentsBtn(true)}>comments</Button>
+            <Button variant="text" onClick={() => {
+              setSelectedId({
+                id: post.id,
+                username: post.userDto.userName,
+                name: post.userDto.firstName,
+                email: post.userDto.email,
+              });
+              setProfile(true);
+            }}>view profile</Button>
+            <Button variant="text" onClick={() => {
+              nav("/mychats/chat/" + post.id + "&" + post.userDto.userName);
+            }}>Goto chat</Button>
+          </div>
+        </div>
+      ))}
+    
               <div className="relative h-screen flex justify-center items-center">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-md fixed bottom-0 right-0 mb-4 mr-20"

@@ -24,74 +24,7 @@ const Ideas = () => {
   });
   const [addidea, setaddidea] = useState(false);
  
-  
-  const [posts, setPosts] = useState([
-    {
-        "id": 5,
-        "content": "This post is good Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ip",
-        "category": null,
-        "rating": 0,
-        "userDto": {
-            "id": 3,
-            "userName": "kaikalapraveen24@gmail.com",
-            "firstName": "Praveen",
-            "lastName": "Kaikala",
-            "email": "kaikalapraveen24@gmail.com"
-        }
-    },
-    {
-        "id": 4,
-        "content": "Hello",
-        "category": null,
-        "rating": 0,
-        "userDto": {
-            "id": 4,
-            "userName": "karthikarava1802@gmail.com",
-            "firstName": "Karthik",
-            "lastName": "Arava",
-            "email": "karthikarava1802@gmail.com"
-        }
-    },
-    {
-        "id": 3,
-        "content": "Srkr engineering college",
-        "category": null,
-        "rating": 0,
-        "userDto": {
-            "id": 4,
-            "userName": "karthikarava1802@gmail.com",
-            "firstName": "Karthik",
-            "lastName": "Arava",
-            "email": "karthikarava1802@gmail.com"
-        }
-    },
-    {
-        "id": 2,
-        "content": "Srkr engineering college",
-        "category": null,
-        "rating": 0,
-        "userDto": {
-            "id": 2,
-            "userName": "jp7903424@gmail.com",
-            "firstName": "Balireddy",
-            "lastName": "John Prakash",
-            "email": "jp7903424@gmail.com"
-        }
-    },
-    {
-        "id": 1,
-        "content": "This Post May Contain Best Algorithms lorem",
-        "category": "WEB_DEV",
-        "rating": 0,
-        "userDto": {
-            "id": 2,
-            "userName": "jp7903424@gmail.com",
-            "firstName": "Balireddy",
-            "lastName": "John Prakash",
-            "email": "jp7903424@gmail.com"
-        }
-    }
-]);
+  const [posts, setPosts] = useState([]);
   const [liked, setliked] = useState(Array(posts.length).fill(false));
   console.log(liked);
   const handlelikes = (index) => {
@@ -121,6 +54,9 @@ const Ideas = () => {
     updatedLiked[index] = newValue;
     setliked(updatedLiked);
   };
+
+  const moment = require('moment');
+  
   return (
     <div className="flex justify-center " style={{width:"100%"}}>
       {addidea ? (
@@ -139,18 +75,20 @@ const Ideas = () => {
             />
           ) : (
             <div className="flex 100p" style={commentsBtn ? {}:{justifyContent:"center"}} >
-            <div className="flex w-80p items-center justify-center flex-col z-3" style={commentsBtn ? {width:"70%"} : {}}>
+            <div className="flex w-80p items-center justify-center flex-col z-3 " style={commentsBtn ? {width:"70%"} : {}}>
               <p className="text-center font-bold">TOP IDEAS</p>
               {posts.map((data, index) => {
                 return (
                   <div
-                    className="flex flex-col border border-grey-100 w-100p m-4" style={commentsBtn ? {width:"70%"} : {}}
+                    className="flex flex-col border rounded-xl shadow-md   border-grey-100 w-100p m-4" style={commentsBtn ? {width:"70%"} : {}}
                     key={index}
                   >
                     <div className="flex m-5">
                      
-                      <div>
+                      <div className="flex justify-between w-100p ">
                         <p className="ml-2 font-bold">{data.userDto.firstName} {data.userDto.lastName}</p>
+                        <span className="text-[#66676c] font-semibold">{moment(data.createdAt).format("DD-MM-YYYY   hh:mma")}</span>
+                       
                       </div>
                     </div>
                     <div className="flex flex-row ml-5">
@@ -163,18 +101,27 @@ const Ideas = () => {
                           handlelikes(index)
                           if(!liked[index])
                           {
-                            data.rating++
+                            data.likeCount++
                           }
                           else{
-                            data.rating--
+                            data.likeCount--
                           }
                           
                         }}
                       >
                        {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>}
-                        <p>{data.rating}</p>
+                        <p>{data?.likeCount}</p>
                       </div>
-                        <Button variant="text" onClick={()=>setCommentsBtn(true)}>comments</Button>
+                        <Button variant="text" onClick={()=>{
+                          setCommentsBtn(true)
+                          setSelectedId({
+                            id: data.id,
+                            userName: data.userName,
+                            firstName: data.userDto.firstName,
+                            lastName:data.userDto.lastName,
+                            email: data.userDto.email,
+                          });
+                        }}>comments</Button>
                       <Button
                         variant="text"
                         onClick={() => {
@@ -185,6 +132,7 @@ const Ideas = () => {
                             lastName:data.userDto.lastName,
                             email: data.userDto.email,
                           });
+                          console.log(selectedId)
                           setProfile(true);
                         }}
                       >
@@ -210,8 +158,13 @@ const Ideas = () => {
              
             </div>
             {commentsBtn && (
-              <div className=" flex flex-1 fixed top-15 right-0">
-                <Comments/>
+              <div className="flex flex-1 fixed top-14 right-20 " style={{width:"400px"}}>
+               
+                  <div className="flex w-100p">
+ <Comments id={selectedId.id} firstName={selectedId.firstName} lastName={selectedId.lastName}/>
+                  </div>
+               
+
                 </div>
             )}
             </div>

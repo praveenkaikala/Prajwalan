@@ -1,72 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import image from "../Asserts/image.png";
 import AddIdea from "./AddIdea";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Button, Rating } from "@mui/material";
+import Modal from "./Modal"
+import EditIdea from "./EditIdea";
+import axios from "axios";
 const Profile = () => {
   const [addidea, setaddidea] = useState(false);
-  const [userdata, setuserdata] = useState({
-    id: 1,
-    username: "Chrissie123",
-    name: "Ballchin",
-    email: "cballchin0@nasa.gov",
-    bio: "In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.",
-    ideas: [
-      {
-        id: 1,
-        content:
-          "Nulla facilisi. Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui.",
-        likes: "597",
-        email: "aharbour0@github.io",
-        username: "Anson",
-        name: "Anson Harbour",
-      },
-      {
-        id: 2,
-        content:
-          "Suspendisse potenti. Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
-        likes: "842",
-        email: "wigonet1@independent.co.uk",
-        username: "Waylin",
-        name: "Waylin Igonet",
-      },
-      {
-        id: 3,
-        content:
-          "Nunc purus. Phasellus in felis. Donec semper sapien a libero. Nam dui. Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius. Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.",
-        likes: "975",
-        email: "jreavell2@jugem.jp",
-        username: "Jacqueline",
-        name: "Jacqueline Reavell",
-      },
-      {
-        id: 4,
-        content:
-          "Aliquam erat volutpat. In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst. Etiam faucibus cursus urna. Ut tellus. Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.",
-        likes: "1875",
-        email: "mhoward3@walmart.com",
-        username: "Morgen",
-        name: "Morgen Howard",
-      },
-      {
-        id: 5,
-        content: "Nunc purus. Phasellus in felis.",
-        likes: "46933",
-        email: "jbeden4@hibu.com",
-        username: "Joye",
-        name: "Joye Beden",
-      },
-    ],
-  });
+  const [editIdea,setEditIdea]=useState(false)
+  // http://localhost:8082/get-all-posts
+  const [userdata, setuserdata] = useState([]);
+  const [openModal,setOpenModal]=useState(false)
   const [liked, setliked] = useState(Array(userdata.length).fill(false));
+  const [deleteId,setDeleteId] = useState();
   const handlelikes = (index) => {
     let likes = [...liked];
     likes[index] = !likes[index];
     setliked(likes);
   };
+
+  const handleOnClose = () => {
+    setOpenModal(false);
+  };
+  useEffect(()=>{
+    axios.get("http://localhost:8082/get-posts",{
+      headers: {
+        'Content-Type': 'application/json', // Content-Type header
+        'Authorization': 'Bearer '+sessionStorage.getItem("token"), // Authorization header
+      },
+    }).then((res)=>{
+      if(res.status===200)
+      {
+        console.log(res.data)
+        setuserdata(res.data)
+      }
+    }).catch((err)=>{
+      console.log(err)
+    })
+  },[openModal])
+const [selectedIdea,setSelectedIdea]=useState({
+
+})
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:8082/delete-post/${deleteId}`, {
+        headers: {
+          Authorization: 'Bearer '+sessionStorage.getItem("token"),
+        },
+      });
+      setOpenModal(false);
+
+      // setResponse(response.data);
+    } catch (error) {
+      console.error('Error deleting resource:', error);
+      // setResponse('Error deleting resource');
+    }
+  };
   return (
-    <div
+    <div>
+      {editIdea ? (
+        <EditIdea setEditIdea={setEditIdea} id={selectedIdea.id} content={selectedIdea.content}/>
+      ):(
+        <div
       className="flex w-100p justify-center overflow-scroll"
       style={{ height: "100%", overflow: "scroll", scrollbarWidth: "none" }}
     >
@@ -83,27 +80,27 @@ const Profile = () => {
               />
             </div> */}
             <div className="m-5 flex flex-col justify-center">
-              <div className="flex mt-1">
+              {/* <div className="flex mt-1">
                 <span>UserName:</span>
-                <p className="font-semibold ml-2">{userdata.username}</p>
-              </div>
+                <p className="font-semibold ml-2">{userdata[0].userDto}</p>
+              </div> */}
               <div className="flex mt-1">
                 <span>Name:</span>
-                <p className="font-semibold ml-2">{userdata.name}</p>
+                <p className="font-semibold ml-2">{userdata[0]?.userDto?.firstName} {userdata[0]?.userDto?.lastName}</p>
               </div>
               <div className="flex mt-1">
                 <span>Gmail:</span>
-                <p className="font-semibold ml-2">{userdata.email}</p>
+                <p className="font-semibold ml-2">{userdata[0]?.userDto?.userName}</p>
               </div>
-              <div className="flex mt-1">
+              {/* <div className="flex mt-1">
                 <span>Bio:</span>
                 <p className="font-semibold ml-2">{userdata.bio}</p>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="flex flex-col justify-center w-100p items-center mt-3">
             <p className="font-bold">my ideas</p>
-            {userdata.ideas.map((data, index) => {
+            {userdata?.map((data, index) => {
               return (
                 <div
                   className="flex flex-col border border-grey-100 w-50p m-4"
@@ -141,9 +138,19 @@ const Profile = () => {
                         }}
                       >
                        {liked[index]?<FavoriteIcon style={{color:"red"}}/>:<FavoriteBorderIcon/>}
-                        <p>{data.rating}</p>
+                        <p>{data.likeCount}</p>
                       </div>
-                    <Button variant="text">Delete Idea</Button>
+                      <Button variant="text" onClick={()=>{
+                        setEditIdea(true)
+                        setSelectedIdea({
+                          id:data.Id,
+                          content:data.content
+                        })
+                      }} >Edit Idea</Button>
+                    <Button variant="text" onClick={()=>{
+                      setOpenModal(true)
+                      setDeleteId(data.id);
+                      }} >Delete Idea</Button>
                   </div>
                 </div>
               );
@@ -161,7 +168,26 @@ const Profile = () => {
           </div>
         </div>
       )}
+      {
+openModal && (
+  <Modal isOpen={openModal} onClose={handleOnClose}>
+  <h2 className="text-center font-bold">Are you sure you want to delete?</h2>
+  <div className="flex justify-center mt-4">
+    <button className="mr-4 bg-red-500 text-white px-4 py-2 rounded" onClick={handleDelete}>
+      Delete
+    </button>
+    <button className="bg-gray-500 text-white px-4 py-2 rounded" onClick={handleOnClose}>
+      Cancel
+    </button>
+  </div>
+</Modal>
+
+)
+      }
     </div>
+      )}
+    </div>
+   
   );
 };
 

@@ -7,12 +7,28 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
 const AddIdea = ({ addidea, setaddidea }) => {
   const [data, setdata] = useState({
     content: "",
-    Category: "web",
+    category: "web",
   });
+  const submitPost=()=>{
+    axios.post("http://localhost:8082/create-post", data, {
+      headers: {
+        'Content-Type': 'application/json', // Content-Type header
+        'Authorization': 'Bearer '+sessionStorage.getItem("token"), // Authorization header
+      },
+    }).then((res)=>{
+      console.log(res.data)
+      if(res.status === 201)
+        window.location.href = "/ideas";
+
+    }).catch((err)=>{
+      console.log(err)
+    })
+  }
   const Datachange = (e) => {
     setdata({ ...data, [e.target.name]: e.target.value });
   };
@@ -68,7 +84,7 @@ const AddIdea = ({ addidea, setaddidea }) => {
         <Button
           variant="contained"
           style={{ margin: "10px" }}
-          onClick={() => console.log(data)}
+          onClick={()=>submitPost()}
         >
           Submit
         </Button>

@@ -87,9 +87,11 @@ const Login = () => {
                   {
                     console.log(response.data.token);
                       sessionStorage.setItem("token",response.data.token);
+                      sessionStorage.setItem("id",response.data.id);
                     setLogin(true);
                     window.location.href = "/ideas"
                     setMsg("");
+                    console.log(response.data);
                   }
                   else{
                     setOpenModal(true);
@@ -180,192 +182,158 @@ const Login = () => {
         <div className="flex flex-1 flex-col justify-center  lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 className="mt-6 text-center text-3xl font-semibold text-gray-900 capitalize">
-              Create your account
+              Create your own account
             </h2>
           </div>
           <div className="mt-8 sm:mx-auto w-80p sm:max-w-md">
-            <div className="bg-white py-8 px-4  sm:rounded-lg sm:px-10 shadow-2xl">
-              <Formik
-                initialValues={{
-                  firstName: "",
-                  lastName: "",
-                  email: "",
-                  userName: "",
-                  password: "",
-                }}
-                validationSchema={Yup.object({
-                  firstname: Yup.string().required("Name is required"),
-                  lastName: Yup.string().required("Name is required"),
-                  email: Yup.string()
-                    .email("Invalid email address")
-                    .required("Email is required"),
-                  username: Yup.string().required("Username is required"),
-                  password: Yup.string()
-                    .required("Password is required")
-                    .min(6, "Password must be at least 6 characters"),
-                })}
-                onSubmit={(values, { setSubmitting }) => {
-                  const data = {
-                    firstName: values.firstName,
-                    lastName: values.lastName,
-                    email: values.email,
-                    userName: values.userName,
-                    password: values.password,
-                  };
-                  setemail(values.email);
-                  setSubmitting(true);
-                  setLoading(true)
-                   axios.post("http://localhost:8082/api/v1/auth/register", data, {
-                    headers: {
-                      "Content-Type": "application/json"
-                    }
-                  }).then((response) => {
-                    setLoading(false)
-                    if(response.status===200){
-                      console.log(response.data.token);
-                      sessionStorage.setItem("token",response.data.token);
-                      setOpenModal(true);
-                      
-                    }
-                    console.log(response.data);
-                  }).catch((error) => {
-                    console.error(error);
-                  });
-                }}
-              >
-                <Form className="space-y-6">
-                  <div>
-                    <label
-                      htmlFor="firstName"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      FirstName
-                    </label>
-                    <Field
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      autoComplete="name"
-                      className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    <ErrorMessage
-                      name="name"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
+          <div className="bg-white py-8 px-4 sm:rounded-lg sm:px-10 shadow-2xl">
+      <Formik
+        initialValues={{
+          firstName: '',
+          lastName: '',
+          email: '',
+          userName: '',
+          password: '',
+        }}
+        validationSchema={Yup.object({
+          firstName: Yup.string().required('First Name is required'),
+          lastName: Yup.string().required('Last Name is required'),
+          email: Yup.string()
+          .email('Invalid email address')
+          .required('Email is required')
+          .matches(/\.com$/, 'Email must contain ".com"'),
+          userName: Yup.string().required('Username is required'),
+          password: Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+        })}
+        onSubmit={(values, { setSubmitting }) => {
+          const data = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            userName: values.userName,
+            password: values.password,
+          };
+          setemail(values.email)
+          setSubmitting(true);
+          setLoading(true);
+          axios.post('http://localhost:8082/api/v1/auth/register', data, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((response) => {
+              setLoading(false);
+              if (response.status === 200) {
+                console.log(response.data.token);
+                sessionStorage.setItem('token', response.data.token);
+                setMsg("")
+                setOpenModal(true);
+              }
+              console.log(response.data);
+            })
+            .catch((error) => {
+              console.error(error);
+              setMsg("email or username already exist")
+              setLoading(false)
+            })
+            .finally(() => {
+              setSubmitting(false);
+            });
+        }}
+      >
+        <Form className="space-y-6">
+          <div>
+            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
+            <Field
+              id="firstName"
+              name="firstName"
+              type="text"
+              autoComplete="given-name"
+              className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
+          </div>
+          <div>
+            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
+            <Field
+              id="lastName"
+              name="lastName"
+              type="text"
+              autoComplete="family-name"
+              className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email address
+            </label>
+            <Field
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+          </div>
+          <div>
+            <label htmlFor="userName" className="block text-sm font-medium text-gray-700">
+              Username
+            </label>
+            <Field
+              id="userName"
+              name="userName"
+              type="text"
+              autoComplete="username"
+              className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <ErrorMessage name="userName" component="div" className="text-red-500 text-sm" />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <Field
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
+          </div>
+          <div>
+          <div className="w-100p  justify-center flex flex-col gap-3">
+                  {
+                    msg.length >0 && 
+                <p className="text-red-500 text-center font-semibold m-2">{msg}</p>
+                  }
                   </div>
-                  <div>
-                    <label
-                      htmlFor="lastName"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      LastName
-                    </label>
-                    <Field
-                      id="lastName"
-                      name="lastName"
-                      type="text"
-                      autoComplete="name"
-                      className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    <ErrorMessage
-                      name="name"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Email address
-                    </label>
-                    <div className="flex w-100p flex-col">
-                      <div className="flex w-100p">
-                        <div className="flex flex-col w-100p ">
-                          <Field
-                            id="email"
-                            name="email"
-                            type="email"
-                            autoComplete="email"
-                            className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          />
-                          <ErrorMessage
-                            name="email"
-                            component="div"
-                            className="text-red-500 text-sm"
-                          />
-                        </div>
-
-                       
-                      </div>
-
-            
-                    </div>
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="userName"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Username
-                    </label>
-                    <Field
-                      id="username"
-                      name="username"
-                      type="text"
-                      autoComplete="username"
-                      className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    <ErrorMessage
-                      name="username"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Password
-                    </label>
-                    <Field
-                      id="password"
-                      name="password"
-                      type="password"
-                      autoComplete="new-password"
-                      className="appearance-none block w-100p px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="text-red-500 text-sm"
-                    />
-                  </div>
-
-                  <div>
-                    <button
-                      type="submit"
-                      style={{width:"100%!important"}}
-                      className="w-[100%] flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      { loading?<CircularProgress color="secondary" /> : <p>Register</p>}
-                    </button>
-                  </div>
-                </Form>
-              </Formik>
-              <p className="mt-10 text-center text-sm text-gray-500">
-                Already have an account?{" "}
-                <button
-                  className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 w-[100%]"
-                  onClick={() => setLogin(true)}
-                >
-                  Login
-                </button>
-              </p>
-            </div>
+            <button
+              type="submit"
+              className="w-100p flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              
+            >
+              {loading ? <CircularProgress/> : 'Register'}
+            </button>
+          </div>
+        </Form>
+      </Formik>
+      <p className="mt-10 text-center text-sm text-gray-500">
+        Already have an account?{' '}
+        <button
+          className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 w-full"
+          onClick={() => setLogin(true)}
+        >
+          Login
+        </button>
+      </p>
+    </div>
 
             {openModal && (
               <Modal isOpen={openModal} onClose={handleOnClose}>
@@ -393,9 +361,11 @@ const Login = () => {
                           setOpenModal(false);
                           sessionStorage.setItem("userdata",JSON.stringify(response.data))
                           window.location.href = "/ideas";
-                          
+                          handleOnClose();
                         }
-                      });
+                      }).catch(()=>{
+                          setMsg("Invalid Otp");
+                      })
                   }}
                 >
                   {({ isSubmitting }) => (
@@ -418,9 +388,11 @@ const Login = () => {
                           className="text-red-500 text-sm"
                         />
                       </div>
+                      <p className="text-center text-red-400 font-semibold">{msg.length>0 && msg}</p>
+                      <div>
                       <button
                         type="submit"
-                        disabled={isSubmitting}
+                        
                         className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                       >
                         Verify
@@ -435,8 +407,9 @@ const Login = () => {
                           };
                         }}
                       >
-                        ReSend Otp
+                        Resend Otp
                       </button>
+                      </div>
                     </Form>
                   )}
                 </Formik>

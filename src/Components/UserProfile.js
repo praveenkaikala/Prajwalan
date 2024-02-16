@@ -94,17 +94,6 @@ const UserProfile = ({ id, firstName,lastName, userName, email, profile, setProf
           />
           <div className="flex flex-col w-90p border border-grey-400 mt-5">
             <div className="flex">
-              <div className="m-5">
-                <img
-                  src={image}
-                  alt="photo"
-                  style={{
-                    borderRadius: "50%",
-                    width: "200px",
-                    height: "200px",
-                  }}
-                />
-              </div>
               <div className="m-5 flex flex-col justify-center">
                 {/* <div className="flex mt-1">
                   <span>UserName:</span>

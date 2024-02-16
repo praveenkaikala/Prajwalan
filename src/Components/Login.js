@@ -37,13 +37,8 @@ const Login = () => {
   const [sendotp, setSendOtp] = useState(false);
   const { setislogin } = useContext(mycontext);
   const [login, setLogin] = useState(true);
-  const nav=useNavigate()
   const handleOnClose = () => {
     setOpenModal(false);
-  };
-  const handleLoginSuccess = () => {
-    // setislogin(true);
-    localStorage.setItem("isLogin", "true");
   };
 
   return (
@@ -72,7 +67,6 @@ const Login = () => {
                   userName: values.userName,
                   password: values.password,
                 };
-                setLoading(true)
                  axios.post("http://localhost:8082/api/v1/auth/authenticate",data, {
                   headers: {
                     "Content-Type": "application/json"
@@ -81,7 +75,10 @@ const Login = () => {
                   setLoading(false)
                   if(response.status===200)
                   {
-                    localStorage.setItem("userdata",JSON.stringify(response.data))
+                    localStorage.setItem("isLogin", "true");
+                    localStorage.setItem("userdata",JSON.stringify({
+                      "token":"skdjkshfdcksjcf",
+                    }))
                   }
                   else{
                      alert("enter correct username and password");
@@ -140,7 +137,6 @@ const Login = () => {
                 <div className="w-100p flex justify-center">
                   <button
                     type="submit"
-                    onClick={handleLoginSuccess}
                     className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                   { loading?<CircularProgress color="secondary" /> : <p>Login</p>}
@@ -415,8 +411,8 @@ const Login = () => {
                       .then((response) => {
                         if (response.status === 200) {
                           setOpenModal(false);
+                          localStorage.setItem("isLogin", "true");
                           localStorage.setItem("userdata",JSON.stringify(response.data))
-                          nav("/")
                         }
                       });
                   }}

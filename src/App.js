@@ -5,7 +5,6 @@ import Home from "./Components/Home";
 import Ideas from "./Components/Ideas";
 import Profile from "./Components/Profile";
 import Chat from "./Components/Chat/Chat";
-import Slidebar from "./Components/Chat/Slidebar";
 import Mychats from "./Components/Mychats";
 import "./index.css";
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
@@ -16,14 +15,14 @@ const App = () => {
   const [loading, setloding] = useState(true);
   const [islogin, setislogin] = useState(false);
   useEffect(() => {
-    const storedIsLogin =JSON.parse(localStorage.getItem("userdata"));
-    if (storedIsLogin.token) {
-      setislogin(true);
+    const storedIsLogin = localStorage.getItem("isLogin");
+    if (storedIsLogin) {
+      setislogin(JSON.parse(storedIsLogin));
     }
     setloding(false);
   }, []);
   if (loading) {
-    return <div>Loading...</div>; // Render loading indicator while retrieving login state
+    return <div>Loading...</div>;
   }
   return (
     <div className="m-0">
